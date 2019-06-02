@@ -1,0 +1,82 @@
+syntax = "proto3";
+option java_outer_classname = "MessageProto";
+import public "google/protobuf/timestamp.proto";
+
+message NewMessageBody {
+    string sender = 1;
+    string receiver = 2;
+    google.protobuf.Timestamp date = 3;
+    string content = 4;
+    string uuid = 5;
+}
+
+message ClientMsg {
+    enum MsgType {
+        NEW_MESSAGE = 0;
+        ACK = 1;
+        LOGIN = 2;
+    }
+
+    MsgType msgType = 1;
+
+    oneof MessageBody {
+        NewMessageBody newMessageBody = 2;
+        AckBody ackBody = 3;
+        LoginBody loginBody = 4;
+    }
+
+    message LoginBody {
+        string username = 1;
+        string password = 2;
+    }
+
+    message AckBody {
+        enum AckType {
+            RECEIVE_ACK = 0;
+        }
+        string sender = 1;
+        string receiver = 2;
+        string ref_uuid = 3;
+        google.protobuf.Timestamp date = 4;
+    }
+}
+
+message ServerMsg {
+    enum MsgType {
+        NEW_MESSAGE_NOTIFICATION = 0;
+        ACK_SEND = 1;
+        ACK_PUSH = 2;
+        ACK_ACK = 3;
+        LOGIN_STATUS = 4;
+    }
+
+    MsgType msgType = 1;
+
+    oneof MessageBody {
+        NewMessageBody newMessageBody = 2;
+        AckSendBody ackSendBody = 3;
+        AckPushBody ackPushBody = 4;
+        AckAckBody ackAckBody = 5;
+        LoginStatusBody loginStatusBody = 6;
+    }
+
+    message LoginStatusBody {
+        bool status = 1;
+        string msg = 2;
+    }
+
+    message AckSendBody {
+        string uuid = 1;
+        google.protobuf.Timestamp timestamp = 2;
+    }
+
+    message AckPushBody {
+        string uuid = 1;
+        google.protobuf.Timestamp timestamp = 2;
+    }
+
+    message AckAckBody {
+        string uuid = 1;
+        google.protobuf.Timestamp timestamp = 2;
+    }
+}
