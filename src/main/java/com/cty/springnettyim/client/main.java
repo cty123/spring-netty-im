@@ -1,50 +1,54 @@
 package com.cty.springnettyim.client;
 
 import com.cty.springnettyim.infrastructure.proto.MessageProto;
+import com.google.protobuf.Timestamp;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 
+import java.util.Date;
 import java.util.Scanner;
 
 public class main {
-
-    public static void main(String[] args) throws Exception{
-
+    public static void main(String[] args) {
         String host = "127.0.0.1";
         int port = 8090;
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        Channel channel = new ImConnection().connect(host, port);
 
-        try {
-            Bootstrap b = new Bootstrap(); // (1)
-            b.group(workerGroup); // (2)
-            b.channel(NioSocketChannel.class); // (3)
-            b.option(ChannelOption.SO_KEEPALIVE, true); // (4)
-            b.handler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                public void initChannel(SocketChannel ch) {
-                    ch.pipeline().addLast("decoder",
-                            new ProtobufDecoder(MessageProto.ClientMsg.getDefaultInstance()));
-                    ch.pipeline().addLast("encoder",
-                            new ProtobufEncoder());
-                    ch.pipeline().addLast(new ClientHandler());
-                }
-            });
+        sendMessage(channel);
+    }
 
-            // Start the client.
-            ChannelFuture f = b.connect(host, port).sync(); // (5)
+    public static void login(Channel channel) {
+        MessageProto.ClientMsg.LoginBody loginBody = MessageProto.ClientMsg.LoginBody.newBuilder()
+                .setUsername("ctydw")
+                .setPassword("password")
+                .build();
 
-            // Wait until the connection is closed.
-            f.channel().closeFuture().sync();
-        } finally {
-            workerGroup.shutdownGracefully();
-        }
+        MessageProto.ClientMsg msg = MessageProto.ClientMsg.newBuilder()
+                .setMsgType(MessageProto.ClientMsg.MsgType.LOGIN)
+                .setLoginBody(loginBody)
+                .build();
+
+        channel.writeAndFlush(msg);
+    }
+
+    public static void sendMessage(Channel channel) {
+        MessageProto.NewMessageBody msg = MessageProto.NewMessageBody.newBuilder()
+                .setSender("test user")
+                .setReceiver("cty")
+                .setContent("hello 11111")
+                .setUuid("1")
+                .setDate(Timestamp.newBuilder().setSeconds(new Date().getTime() / 1000)).build();
+
+        MessageProto.ClientMsg message = MessageProto.ClientMsg.newBuilder()
+                .setMsgType(MessageProto.ClientMsg.MsgType.NEW_MESSAGE)
+                .setNewMessageBody(msg)
+                .build();
+
+        channel.writeAndFlush(message);
     }
 }

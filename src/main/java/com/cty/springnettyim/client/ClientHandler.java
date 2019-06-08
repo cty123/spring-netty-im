@@ -7,14 +7,15 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
-
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        MessageProto.ServerMsg message = (MessageProto.ServerMsg) msg;
+        System.out.println("client:" + message.toString());
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        System.out.println(msg);
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
+        ctx.close();
     }
-
 
 }
