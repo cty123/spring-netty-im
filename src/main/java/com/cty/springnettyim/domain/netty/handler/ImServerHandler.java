@@ -1,19 +1,15 @@
-package com.cty.springnettyim.netty.handler;
+package com.cty.springnettyim.domain.netty.handler;
 
-import com.cty.springnettyim.netty.proto.MessageProto;
-import com.cty.springnettyim.rabbitmq.listener.RabbitMqListener;
-import com.cty.springnettyim.rabbitmq.service.RabbitMQService;
-import com.cty.springnettyim.rabbitmq.util.RabbitMQUtil;
+import com.cty.springnettyim.infrastructure.proto.MessageProto;
+import com.cty.springnettyim.adapter.listener.RabbitMqListener;
+import com.cty.springnettyim.domain.rabbitmq.util.RabbitMQUtil;
 import com.google.protobuf.Timestamp;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -23,15 +19,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @Qualifier("serverHandler")
 @ChannelHandler.Sharable
+@Slf4j
 public class ImServerHandler extends ChannelInboundHandlerAdapter {
-
-    private static final Logger log = LoggerFactory.getLogger(ImServerHandler.class);
 
     public static ConcurrentHashMap<String, ChannelHandlerContext> ctx_map = new ConcurrentHashMap<>();
 
     private void handlePushNotification(MessageProto.NewMessageBody msg_body) {
         // 1. Find the target server through cache server
-        String key = "test";
+        String key = "server1";
 
         // 2. Ask the server to do the notification and wait for the answer
         RabbitMQUtil.rabbitMQUtil.getRabbitService().sendMessage(key, msg_body);

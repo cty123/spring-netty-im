@@ -1,24 +1,21 @@
-package com.cty.springnettyim.rabbitmq.config;
+package com.cty.springnettyim.infrastructure.config;
 
-import com.cty.springnettyim.netty.converter.MyProtoBufConverter;
+import com.cty.springnettyim.domain.netty.converter.MyProtoBufConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.support.ConsumerTagStrategy;
-import org.springframework.amqp.support.converter.SimpleMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
+@Slf4j
 public class RabbitMQConfig {
-
-    private static final Logger log= LoggerFactory.getLogger(RabbitMQConfig.class);
 
     @Bean
     public ConnectionFactory amqpConnectionFactory() {

@@ -1,4 +1,4 @@
-package com.cty.springnettyim.netty.server;
+package com.cty.springnettyim.domain.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

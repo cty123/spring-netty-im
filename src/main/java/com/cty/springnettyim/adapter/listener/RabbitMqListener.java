@@ -1,9 +1,10 @@
-package com.cty.springnettyim.rabbitmq.listener;
+package com.cty.springnettyim.adapter.listener;
 
-import com.cty.springnettyim.netty.handler.ImServerHandler;
-import com.cty.springnettyim.netty.proto.MessageProto;
+import com.cty.springnettyim.domain.netty.handler.ImServerHandler;
+import com.cty.springnettyim.infrastructure.proto.MessageProto;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -13,13 +14,12 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Slf4j
 public class RabbitMqListener {
-
-    private static final Logger log = LoggerFactory.getLogger(RabbitMqListener.class);
 
     public static ConcurrentHashMap<String, MessageProto.NewMessageBody> ackWaitList = new ConcurrentHashMap<>();
 
-    @RabbitListener(queues = "test")
+    @RabbitListener(queues = "server1")
     public void listen(Message msg) {
         // Get Message Body
         byte[] bytes = msg.getBody();

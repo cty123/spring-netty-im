@@ -1,6 +1,6 @@
-package com.cty.springnettyim.netty.handler;
+package com.cty.springnettyim.domain.netty.handler;
 
-import com.cty.springnettyim.netty.proto.MessageProto;
+import com.cty.springnettyim.infrastructure.proto.MessageProto;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;

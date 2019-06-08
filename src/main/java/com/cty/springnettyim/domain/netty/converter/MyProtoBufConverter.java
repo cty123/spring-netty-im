@@ -1,6 +1,6 @@
-package com.cty.springnettyim.netty.converter;
+package com.cty.springnettyim.domain.netty.converter;
 
-import com.cty.springnettyim.netty.proto.MessageProto;
+import com.cty.springnettyim.infrastructure.proto.MessageProto;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.springframework.amqp.core.Message;

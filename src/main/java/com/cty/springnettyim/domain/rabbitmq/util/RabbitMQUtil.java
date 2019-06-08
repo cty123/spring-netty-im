@@ -1,7 +1,6 @@
-package com.cty.springnettyim.rabbitmq.util;
+package com.cty.springnettyim.domain.rabbitmq.util;
 
-import com.cty.springnettyim.netty.proto.MessageProto;
-import com.cty.springnettyim.rabbitmq.service.RabbitMQService;
+import com.cty.springnettyim.domain.rabbitmq.service.RabbitMQService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

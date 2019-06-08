@@ -1,20 +1,16 @@
-package com.cty.springnettyim.rabbitmq.service;
+package com.cty.springnettyim.domain.rabbitmq.service;
 
-import com.cty.springnettyim.netty.proto.MessageProto;
-import com.google.protobuf.Timestamp;
+import com.cty.springnettyim.infrastructure.proto.MessageProto;
+import lombok.AllArgsConstructor;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service("rabbitService")
+@AllArgsConstructor
 public class RabbitMQService {
 
-    @Autowired
-    AmqpTemplate amqpTemplate;
+    private final AmqpTemplate amqpTemplate;
 
     public void sendMessage(String key, MessageProto.NewMessageBody msg) {
         amqpTemplate.convertAndSend("test", msg);

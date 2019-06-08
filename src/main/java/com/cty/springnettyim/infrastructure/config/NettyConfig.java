@@ -1,14 +1,10 @@
-package com.cty.springnettyim.netty.config;
+package com.cty.springnettyim.infrastructure.config;
 
-import com.cty.springnettyim.netty.handler.StringProtocolInitalizer;
+import com.cty.springnettyim.domain.netty.handler.StringProtocolInitalizer;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.protobuf.ProtobufDecoder;
-import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 @Configuration
 public class NettyConfig {
