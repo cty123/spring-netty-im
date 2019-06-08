@@ -2,10 +2,11 @@ package com.cty.springnettyim.client;
 
 import com.cty.springnettyim.infrastructure.proto.MessageProto;
 import com.google.protobuf.Timestamp;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+
 import java.util.Date;
 
-public class main {
+public class client1 {
     public static void main(String[] args) {
         String host = "127.0.0.1";
         int port = 8090;
@@ -30,8 +31,8 @@ public class main {
 
     public static void sendMessage(Channel channel) {
         MessageProto.NewMessageBody msg = MessageProto.NewMessageBody.newBuilder()
-                .setSender("cty")
-                .setReceiver("test user")
+                .setSender("test user")
+                .setReceiver("cty")
                 .setContent("hello 11111")
                 .setUuid("1")
                 .setDate(Timestamp.newBuilder().setSeconds(new Date().getTime() / 1000)).build();

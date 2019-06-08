@@ -30,6 +30,7 @@ public class ImServerHandler extends ChannelInboundHandlerAdapter {
 
         // 2. Ask the server to do the notification and wait for the answer
         RabbitMQUtil.rabbitMQUtil.getRabbitService().sendMessage(key, msg_body);
+        log.info("Forward the message to rabbitmq");
     }
 
     private void handlePushNotificationCallback() {
@@ -67,7 +68,7 @@ public class ImServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         MessageProto.ClientMsg message = (MessageProto.ClientMsg) msg;
-        MessageProto.ServerMsg reply = MessageProto.ServerMsg.newBuilder().build();
+        MessageProto.ServerMsg reply;
 
         switch (message.getMsgType()) {
             case LOGIN:
@@ -106,6 +107,7 @@ public class ImServerHandler extends ChannelInboundHandlerAdapter {
                 // 1. Write ack
                 reply = makeSendAck(msg_body);
                 ctx.writeAndFlush(reply);
+                log.info("Received Send_Message request from " + username);
 
                 // 2. Push Notification to the target
                 handlePushNotification(msg_body);
@@ -141,8 +143,6 @@ public class ImServerHandler extends ChannelInboundHandlerAdapter {
                 // Construct error message
                 break;
         }
-
-        System.out.println("Send to client: " + reply.toString());
     }
 
     @Override

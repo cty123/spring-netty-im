@@ -1,6 +1,7 @@
 package com.cty.springnettyim.infrastructure.config;
 
 import com.cty.springnettyim.domain.netty.converter.MyProtoBufConverter;
+import com.cty.springnettyim.domain.rabbitmq.queue.TaskQueueDaemonThread;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class RabbitMQConfig {
     @Bean
     public ConnectionFactory amqpConnectionFactory() {
         CachingConnectionFactory factory = new CachingConnectionFactory();
-        factory.setHost("127.0.0.1");
+        factory.setHost("172.17.0.2");
         factory.setPort(5672);
         factory.setUsername("guest");
         factory.setPassword("guest");
@@ -34,5 +35,13 @@ public class RabbitMQConfig {
         rabbitTemplate.setConnectionFactory(amqpConnectionFactory);
         rabbitTemplate.setMessageConverter(new MyProtoBufConverter());
         return rabbitTemplate;
+    }
+
+    @Bean
+    public TaskQueueDaemonThread taskQueueDaemonThread() {
+        TaskQueueDaemonThread taskQueueDaemonThread =
+                TaskQueueDaemonThread.getInstance();
+        taskQueueDaemonThread.init();
+        return taskQueueDaemonThread;
     }
 }

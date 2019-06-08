@@ -1,6 +1,8 @@
 package com.cty.springnettyim.adapter.listener;
 
 import com.cty.springnettyim.domain.netty.handler.ImServerHandler;
+import com.cty.springnettyim.domain.rabbitmq.queue.RemoveExpiredMessage;
+import com.cty.springnettyim.domain.rabbitmq.queue.TaskQueueDaemonThread;
 import com.cty.springnettyim.infrastructure.proto.MessageProto;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,10 +22,14 @@ public class RabbitMqListener {
 
     public static ConcurrentHashMap<String, MessageProto.NewMessageBody> ackWaitList = new ConcurrentHashMap<>();
 
+    @Autowired
+    private TaskQueueDaemonThread taskQueueDaemonThread;
+
     @RabbitListener(queues = "server1")
     public void listen(Message msg) {
         // Get Message Body
         byte[] bytes = msg.getBody();
+        log.info("Receive forwarded message from Rabbitmq");
 
         try {
             // Get Parse Message from bytes
@@ -44,14 +51,16 @@ public class RabbitMqListener {
                         .setMsgType(MessageProto.ServerMsg.MsgType.NEW_MESSAGE_NOTIFICATION)
                         .build();
                 target_ctx.writeAndFlush(m);
+                ackWaitList.put(message.getUuid(), message);
+
+                // Remove the message after 2000ms
+                taskQueueDaemonThread.put(2000, new RemoveExpiredMessage(uuid));
+            } else {
+                // Hand over to offline message storage
             }
 
             // 3. Write ACK for ack
-
-
             // 4. Return success to the source
-
-
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
         }

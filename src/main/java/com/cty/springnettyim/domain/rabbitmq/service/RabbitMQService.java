@@ -13,6 +13,8 @@ public class RabbitMQService {
     private final AmqpTemplate amqpTemplate;
 
     public void sendMessage(String key, MessageProto.NewMessageBody msg) {
-        amqpTemplate.convertAndSend("test", msg);
+        amqpTemplate.convertAndSend(key, msg);
     }
+
+
 }
